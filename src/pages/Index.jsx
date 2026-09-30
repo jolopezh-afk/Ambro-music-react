@@ -1,0 +1,141 @@
+import { Link } from "react-router";
+import Navbar from "../components/Navbar";
+import "../index.css";
+
+function Index() {
+    return (
+        <>
+            <Navbar />
+
+            <main className="container my-4">
+                <div
+                    id="carruselInicio"
+                    className="carousel slide shadow rounded overflow-hidden bg-dark"
+                    data-bs-ride="carousel"
+                >
+                    <div className="carousel-indicators">
+                        <button
+                            type="button"
+                            data-bs-target="#carruselInicio"
+                            data-bs-slide-to="0"
+                            className="active"
+                            aria-current="true"
+                            aria-label="Slide 1"
+                        ></button>
+
+                        <button
+                            type="button"
+                            data-bs-target="#carruselInicio"
+                            data-bs-slide-to="1"
+                            aria-label="Slide 2"
+                        ></button>
+
+                        <button
+                            type="button"
+                            data-bs-target="#carruselInicio"
+                            data-bs-slide-to="2"
+                            aria-label="Slide 3"
+                        ></button>
+                    </div>
+
+                    <div className="carousel-inner">
+                        <div
+                            className="carousel-item active"
+                            data-bs-interval="4000"
+                        >
+                            <Link to="/productos">
+                                <img
+                                    src="/img/banner1.png"
+                                    className="d-block w-100"
+                                    alt="Banner 1"
+                                    style={{
+                                        height: "400px",
+                                        objectFit: "contain",
+                                        cursor: "pointer",
+                                    }}
+                                />
+                            </Link>
+                        </div>
+
+                        <div
+                            className="carousel-item"
+                            data-bs-interval="4000"
+                        >
+                            <Link to="/productos">
+                                <img
+                                    src="/img/banner2.png"
+                                    className="d-block w-100"
+                                    alt="Banner 2"
+                                    style={{
+                                        height: "400px",
+                                        objectFit: "contain",
+                                        cursor: "pointer",
+                                    }}
+                                />
+                            </Link>
+                        </div>
+
+                        <div
+                            className="carousel-item"
+                            data-bs-interval="4000"
+                        >
+                            <Link to="/productos">
+                                <img
+                                    src="/img/banner3.png"
+                                    className="d-block w-100"
+                                    alt="Banner 3"
+                                    style={{
+                                        height: "400px",
+                                        objectFit: "contain",
+                                        cursor: "pointer",
+                                    }}
+                                />
+                            </Link>
+                        </div>
+                    </div>
+
+                    <button
+                        className="carousel-control-prev"
+                        type="button"
+                        data-bs-target="#carruselInicio"
+                        data-bs-slide="prev"
+                    >
+                        <span
+                            className="carousel-control-prev-icon"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span className="visually-hidden">
+                            Anterior
+                        </span>
+                    </button>
+
+                    <button
+                        className="carousel-control-next"
+                        type="button"
+                        data-bs-target="#carruselInicio"
+                        data-bs-slide="next"
+                    >
+                        <span
+                            className="carousel-control-next-icon"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span className="visually-hidden">
+                            Siguiente
+                        </span>
+                    </button>
+                </div>
+            </main>
+
+            <footer className="mt-auto">
+                <p>
+                    AmbroMusic - La Florida, Santiago de Chile.
+                    Todos los derechos reservados.
+                </p>
+            </footer>
+        </>
+    );
+}
+
+export default Index;

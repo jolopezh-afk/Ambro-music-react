@@ -1,0 +1,672 @@
+/* =========================
+   COLORES AMBROMUSIC
+   ========================= */
+
+:root {
+    --negro: #121212;
+    --negro-secundario: #1E1E1E;
+
+    --rojo: #D32F2F;
+    --rojo-hover: #E53935;
+
+    --amarillo: #FBC02D;
+    --verde: #388E3C;
+
+    --blanco: #F5F5F5;
+    --gris: #BDBDBD;
+}
+
+
+/* =========================
+   NAVBAR
+   ========================= */
+
+.navbar-ambromusic {
+    background-color: var(--negro-secundario);
+    border-bottom: 1px solid #333333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.navbar-ambromusic .navbar-brand {
+    color: var(--blanco);
+    font-weight: 700;
+}
+
+.navbar-ambromusic .navbar-brand:hover {
+    color: var(--amarillo);
+}
+
+.navbar-ambromusic .nav-link {
+    color: var(--gris);
+    transition: color 0.2s ease;
+}
+
+.navbar-ambromusic .nav-link:hover {
+    color: var(--blanco);
+}
+
+.navbar-ambromusic .nav-link.active {
+    color: var(--blanco);
+}
+
+
+/* =========================
+   BUSCADOR
+   ========================= */
+
+.navbar-ambromusic .form-control {
+    background-color: var(--negro-secundario);
+    border: 1px solid #333333;
+    color: var(--blanco);
+}
+
+.navbar-ambromusic .form-control::placeholder {
+    color: var(--gris);
+}
+
+.navbar-ambromusic .form-control:focus {
+    background-color: var(--negro-secundario);
+    color: var(--blanco);
+    border-color: var(--rojo);
+    box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.25);
+}
+
+
+/* =========================
+   BOTONES
+   ========================= */
+
+.btn-ambromusic {
+    background-color: var(--rojo);
+    color: var(--blanco);
+    border: none;
+}
+
+.btn-ambromusic:hover {
+    background-color: var(--rojo-hover);
+    color: var(--blanco);
+}
+
+.logo-ambromusic {
+    height: 140px;
+    width: auto;
+}
+
+
+/* =========================
+   INICIO DE SESIĆ“N
+   ========================= */
+
+body {
+    background-color: var(--negro);
+    color: var(--blanco);
+}
+
+.login-container {
+    min-height: 85vh;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+
+    background-color: var(--negro-secundario);
+
+    border: 1px solid #333333;
+    border-radius: 12px;
+}
+
+.login-titulo {
+    color: var(--blanco);
+    font-weight: 700;
+}
+
+.login-card .form-label {
+    color: var(--gris);
+}
+
+.login-card .form-control {
+    background-color: var(--negro);
+    border: 1px solid #333333;
+    color: var(--blanco);
+}
+
+.login-card .form-control::placeholder {
+    color: var(--gris);
+}
+
+.login-card .form-control:focus {
+    background-color: var(--negro);
+    color: var(--blanco);
+    border-color: var(--rojo);
+    box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.25);
+}
+
+.login-card .btn-ambromusic {
+    padding: 10px;
+    font-weight: 600;
+}
+
+
+/* =========================
+   CATĆLOGO DE PRODUCTOS
+   ========================= */
+
+.grid-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+
+    gap: 25px;
+    padding: 30px 0;
+}
+
+
+/* Tarjeta de cada producto */
+
+.tarjeta-producto {
+    background-color: var(--negro-secundario);
+
+    border: 1px solid #333333;
+    border-radius: 12px;
+
+    padding: 20px;
+
+    text-align: center;
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+/* Efecto al pasar el mouse */
+
+.tarjeta-producto:hover {
+    transform: translateY(-5px);
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+
+    border-color: var(--rojo);
+}
+
+
+/* Imagen del instrumento */
+
+.tarjeta-producto img {
+    width: 100%;
+    height: 200px;
+
+    object-fit: contain;
+
+    margin-bottom: 15px;
+}
+
+
+/* Nombre */
+
+.tarjeta-producto h3 {
+    color: var(--blanco);
+
+    font-size: 1.1rem;
+    font-weight: 600;
+
+    min-height: 50px;
+
+    margin-bottom: 10px;
+}
+
+
+/* CategorĆ­a */
+
+.tarjeta-producto::before {
+    content: "";
+    display: inline-block;
+
+    color: var(--amarillo);
+}
+
+
+/* Precio */
+
+.tarjeta-producto .precio {
+    color: var(--amarillo);
+
+    font-size: 1.3rem;
+    font-weight: 700;
+
+    margin-bottom: 15px;
+}
+
+
+/* BotĆ³n */
+
+.tarjeta-producto button {
+    width: 100%;
+
+    padding: 10px;
+
+    background-color: var(--rojo);
+    color: var(--blanco);
+
+    border: none;
+    border-radius: 6px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: background-color 0.2s ease;
+}
+
+.tarjeta-producto button:hover {
+    background-color: var(--rojo-hover);
+}
+
+
+/* =========================
+   FOOTER
+   ========================= */
+
+footer {
+    background-color: var(--negro-secundario);
+
+    color: var(--gris);
+
+    text-align: center;
+
+    padding: 20px;
+
+    margin-top: 40px;
+
+    border-top: 1px solid #333333;
+}
+
+footer p {
+    margin: 0;
+
+    font-size: 0.9rem;
+}
+
+
+/* =========================
+   VENDEDOR
+   ========================= */
+
+.titulo-vendedor {
+    color: var(--blanco);
+
+    font-size: 1.8rem;
+    font-weight: 700;
+
+    margin-top: 30px;
+    margin-bottom: 0;
+}
+
+
+/* =========================
+   GRID VENDEDOR
+   ========================= */
+
+.grid-vendedor {
+    display: grid;
+
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(240px, 1fr)
+    );
+
+    gap: 25px;
+
+    padding: 30px 0;
+}
+
+
+/* =========================
+   TARJETAS VENDEDOR
+   ========================= */
+
+.tarjeta-vendedor {
+    background-color: var(--negro-secundario);
+
+    border: 1px solid #333333;
+    border-radius: 12px;
+
+    padding: 20px;
+
+    text-align: center;
+
+    min-height: 300px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* =========================
+   EFECTO TARJETA
+   ========================= */
+
+.tarjeta-vendedor:hover {
+    transform: translateY(-5px);
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+
+    border-color: var(--rojo);
+}
+
+
+/* =========================
+   ICONO
+   ========================= */
+
+.icono-vendedor {
+    height: 140px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 4rem;
+
+    margin-bottom: 15px;
+}
+
+
+/* =========================
+   TITULO TARJETA
+   ========================= */
+
+.tarjeta-vendedor h3 {
+    color: var(--blanco);
+
+    font-size: 1.1rem;
+    font-weight: 600;
+
+    min-height: 50px;
+
+    margin-bottom: 10px;
+}
+
+
+/* =========================
+   DESCRIPCION
+   ========================= */
+
+.tarjeta-vendedor p {
+    color: var(--gris);
+
+    font-size: 0.9rem;
+
+    min-height: 45px;
+
+    margin-bottom: 15px;
+}
+
+
+/* =========================
+   BOTON VENDEDOR
+   ========================= */
+
+.btn-vendedor {
+    width: 100%;
+
+    padding: 10px;
+
+    background-color: var(--rojo);
+    color: var(--blanco);
+
+    border: none;
+    border-radius: 6px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: background-color 0.2s ease;
+}
+
+.btn-vendedor:hover {
+    background-color: var(--rojo-hover);
+
+    color: var(--blanco);
+}
+
+/* =========================
+ADMINISTRADOR
+========================= */
+
+.titulo-admin {
+color: var(--blanco);
+
+font-size: 1.8rem;
+font-weight: 700;
+
+margin-top: 30px;
+margin-bottom: 0;
+
+
+}
+
+/* =========================
+GRID ADMIN
+========================= */
+
+.grid-admin {
+display: grid;
+
+grid-template-columns: repeat(
+    auto-fit,
+    minmax(240px, 1fr)
+);
+
+gap: 25px;
+
+padding: 30px 0;
+
+
+}
+
+/* =========================
+TARJETAS ADMIN
+========================= */
+
+.tarjeta-admin {
+background-color: var(--negro-secundario);
+
+border: 1px solid #333333;
+border-radius: 12px;
+
+padding: 20px;
+
+text-align: center;
+
+min-height: 300px;
+
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+
+transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+
+}
+
+/* =========================
+EFECTO TARJETA
+========================= */
+
+.tarjeta-admin:hover {
+transform: translateY(-5px);
+
+box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+
+border-color: var(--rojo);
+
+
+}
+
+/* =========================
+ICONO ADMIN
+========================= */
+
+.icono-admin {
+height: 140px;
+
+display: flex;
+
+align-items: center;
+justify-content: center;
+
+font-size: 4rem;
+
+margin-bottom: 15px;
+
+
+}
+
+/* =========================
+TITULO TARJETA
+========================= */
+
+.tarjeta-admin h3 {
+color: var(--blanco);
+
+font-size: 1.1rem;
+font-weight: 600;
+
+min-height: 50px;
+
+margin-bottom: 10px;
+
+
+}
+
+/* =========================
+DESCRIPCION
+========================= */
+
+.tarjeta-admin p {
+color: var(--gris);
+
+font-size: 0.9rem;
+
+min-height: 45px;
+
+margin-bottom: 15px;
+
+
+}
+
+/* =========================
+BOTON ADMIN
+========================= */
+
+.btn-admin {
+width: 100%;
+
+padding: 10px;
+
+background-color: var(--rojo);
+color: var(--blanco);
+
+border: none;
+border-radius: 6px;
+
+font-weight: 600;
+
+cursor: pointer;
+
+transition: background-color 0.2s ease;
+
+
+}
+
+.btn-admin:hover {
+background-color: var(--rojo-hover);
+
+color: var(--blanco);
+
+
+}
+
+/* =========================
+   CONTACTO Y SECCIONES
+   ========================= */
+
+.contacto-card {
+    background-color: var(--negro-secundario);
+    border: 1px solid #333333;
+    border-radius: 12px;
+    padding: 28px;
+    height: 100%;
+}
+
+.contacto-card .form-label {
+    color: var(--gris);
+    font-size: 0.875rem;
+    margin-bottom: 6px;
+}
+
+.contacto-card .form-control {
+    background-color: var(--negro) !important;
+    border: 1px solid #333333 !important;
+    color: var(--blanco) !important;
+    border-radius: 6px;
+    padding: 10px 14px;
+}
+
+.contacto-card .form-control::placeholder {
+    color: #666666 !important;
+}
+
+.contacto-card .form-control:focus {
+    background-color: var(--negro) !important;
+    color: var(--blanco) !important;
+    border-color: var(--rojo) !important;
+    box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.25) !important;
+}
+
+.info-box {
+    background-color: var(--negro-secundario);
+    border: 1px solid #333333;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.info-box:hover {
+    transform: translateY(-3px);
+    border-color: var(--rojo);
+}
+
+.info-box-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    display: inline-block;
+}
+
+.info-box h3, .info-box h4 {
+    color: var(--blanco);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.info-box p {
+    color: var(--gris);
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+.info-highlight {
+    color: var(--amarillo);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
