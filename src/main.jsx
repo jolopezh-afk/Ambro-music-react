@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router";
-import Index from "./pages/index.jsx";
+import Index from "./pages/Index.jsx";
 import Productos from "./pages/Productos.jsx";
 import Contacto from "./pages/Contacto.jsx";
 
