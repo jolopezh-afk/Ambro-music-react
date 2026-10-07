@@ -1,6 +1,9 @@
 import { Link } from "react-router";
+import { useCarrito } from "../context/CarritoContext";
 
 function Navbar() {
+    const { totalItems } = useCarrito();
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark navbar-ambromusic">
             <div className="container">
@@ -24,10 +27,7 @@ function Navbar() {
                     <span className="navbar-toggler-icon"></span>
                 </button>
 
-                <div
-                    className="collapse navbar-collapse"
-                    id="navbarAmbroMusic"
-                >
+                <div className="collapse navbar-collapse" id="navbarAmbroMusic">
                     <form
                         className="d-flex mx-lg-4 my-3 my-lg-0 flex-grow-1"
                         role="search"
@@ -39,66 +39,45 @@ function Navbar() {
                             aria-label="Buscar"
                         />
 
-                        <button
-                            className="btn btn-ambromusic"
-                            type="submit"
-                        >
+                        <button className="btn btn-ambromusic" type="submit">
                             Buscar
                         </button>
                     </form>
 
                     <ul className="navbar-nav ms-auto align-items-lg-center">
                         <li className="nav-item">
-                            <Link
-                                className="nav-link"
-                                to="/"
-                            >
+                            <Link className="nav-link" to="/">
                                 Inicio
                             </Link>
                         </li>
 
                         <li className="nav-item">
-                            <Link
-                                className="nav-link"
-                                to="/categorias"
-                            >
+                            <Link className="nav-link" to="/categorias">
                                 Categorías
                             </Link>
                         </li>
 
                         <li className="nav-item">
-                            <Link
-                                className="nav-link"
-                                to="/productos"
-                            >
+                            <Link className="nav-link" to="/productos">
                                 Productos
                             </Link>
                         </li>
 
                         <li className="nav-item">
-                            <Link
-                                className="nav-link"
-                                to="/ofertas"
-                            >
+                            <Link className="nav-link" to="/ofertas">
                                 Ofertas
                             </Link>
                         </li>
 
                         <li className="nav-item">
-                            <Link
-                                className="nav-link"
-                                to="/contacto"
-                            >
+                            <Link className="nav-link" to="/contacto">
                                 Contacto
                             </Link>
                         </li>
 
                         <li className="nav-item">
-                            <Link
-                                className="nav-link"
-                                to="/carrito"
-                            >
-                                🛒 Carrito
+                            <Link className="nav-link" to="/carrito">
+                                🛒 Carrito ({totalItems})
                             </Link>
                         </li>
 
