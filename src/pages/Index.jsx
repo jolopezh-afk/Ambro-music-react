@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import Navbar from "../components/Navbar";
 import "../index.css";
+import { Footer } from "../components/Footer";
 
 function Index() {
     return (
@@ -128,12 +129,7 @@ function Index() {
                 </div>
             </main>
 
-            <footer className="mt-auto">
-                <p>
-                    AmbroMusic - La Florida, Santiago de Chile.
-                    Todos los derechos reservados.
-                </p>
-            </footer>
+            <Footer />
         </>
     );
 }

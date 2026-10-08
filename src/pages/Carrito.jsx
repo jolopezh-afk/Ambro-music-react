@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import Navbar from "../components/Navbar";
 import { useCarrito } from "../context/CarritoContext";
+import { Footer } from "../components/Footer";
 
 function Carrito() {
     const { carrito, totalPrecio, cambiarCantidad, quitar, vaciar } = useCarrito();
@@ -86,9 +87,7 @@ function Carrito() {
                 )}
             </main>
 
-            <footer>
-                <p>AmbroMusic - La Florida, Santiago de Chile. Todos los derechos reservados.</p>
-            </footer>
+           <Footer/>
         </div>
     );
 }
