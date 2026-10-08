@@ -1,4 +1,6 @@
-export const Footer = () => {
+import { Link } from "react-router";
+
+function Footer() {
     return (
         <footer className="mt-auto">
             <p>
@@ -7,4 +9,6 @@ export const Footer = () => {
             </p>
         </footer>
     );
-};
+}
+
+export default Footer;

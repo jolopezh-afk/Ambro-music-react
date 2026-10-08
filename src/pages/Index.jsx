@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import Navbar from "../components/Navbar";
 import "../index.css";
-import { Footer } from "../components/Footer";
+import Footer from "../components/Footer";
 
 function Index() {
     return (
@@ -129,7 +129,8 @@ function Index() {
                 </div>
             </main>
 
-            <Footer />
+           <Footer />
+
         </>
     );
 }

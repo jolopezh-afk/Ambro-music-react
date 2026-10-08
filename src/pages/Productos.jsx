@@ -1,7 +1,7 @@
 import Navbar from "../components/Navbar";
 import Catalogo from "../components/Catalogo";
 import "../index.css";
-import { Footer } from "../components/Footer";
+import Footer from "../components/Footer";
 
 function Productos() {
     return (
@@ -13,6 +13,9 @@ function Productos() {
                     <h2 className="titulo-vendedor">
                         Catálogo de Instrumentos y Equipos
                     </h2>
+                    <p className="subtitulo-catalogo">
+                        Busca, filtra por categoría y arma tu carrito.
+                    </p>
 
                     <Catalogo />
                 </section>
@@ -21,8 +24,6 @@ function Productos() {
             <Footer />
         </div>
     );
-
-
 }
 
 export default Productos;
