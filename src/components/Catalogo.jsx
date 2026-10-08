@@ -1,14 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 
-const catalogoSonidoVivo = [
+const productos = [
     { id: 1, nombre: "Guitarra Eléctrica Stratocaster", precio: 250000, imagen: "/img/guitarra.png", categoria: "Cuerdas" },
     { id: 2, nombre: "Batería Acústica 5 piezas", precio: 550000, imagen: "/img/bateria.png", categoria: "Percusión" },
     { id: 3, nombre: "Amplificador de Bajo 50W", precio: 120000, imagen: "/img/amplificador.png", categoria: "Equipos" },
     { id: 4, nombre: "Micrófono Dinámico Vocal", precio: 45000, imagen: "/img/microfono.png", categoria: "Accesorios" },
 ];
 
-const categorias = ["Todos", ...new Set(catalogoSonidoVivo.map((p) => p.categoria))];
+const categorias = [...new Set(productos.map((p) => p.categoria))];
+
 const formatoPrecio = (n) => `$${n.toLocaleString("es-CL")}`;
 
 function leerCarrito() {
@@ -19,13 +20,19 @@ function leerCarrito() {
     }
 }
 
-function Catalogo() {
+// categoriaFija (opcional): si se entrega, filtra por esa categoría y oculta los botones de filtro
+function Catalogo({ categoriaFija }) {
     const [carrito, setCarrito] = useState(leerCarrito);
     const [busqueda, setBusqueda] = useState("");
     const [categoria, setCategoria] = useState("Todos");
     const [orden, setOrden] = useState("destacados");
     const [panelAbierto, setPanelAbierto] = useState(false);
     const [aviso, setAviso] = useState("");
+
+    const filtroFijo = categoriaFija !== undefined;
+    const categoriaActiva = filtroFijo
+        ? categoriaFija === "Todas" ? "Todos" : categoriaFija
+        : categoria;
 
     useEffect(() => {
         localStorage.setItem("carritoSonidoVivo", JSON.stringify(carrito));
@@ -51,16 +58,16 @@ function Catalogo() {
 
     const productosVisibles = useMemo(() => {
         const texto = busqueda.trim().toLowerCase();
-        const lista = catalogoSonidoVivo.filter(
+        const lista = productos.filter(
             (p) =>
-                (categoria === "Todos" || p.categoria === categoria) &&
+                (categoriaActiva === "Todos" || p.categoria === categoriaActiva) &&
                 p.nombre.toLowerCase().includes(texto)
         );
         if (orden === "menor") return [...lista].sort((a, b) => a.precio - b.precio);
         if (orden === "mayor") return [...lista].sort((a, b) => b.precio - a.precio);
         if (orden === "nombre") return [...lista].sort((a, b) => a.nombre.localeCompare(b.nombre));
         return lista;
-    }, [busqueda, categoria, orden]);
+    }, [busqueda, categoriaActiva, orden]);
 
     const cantidadEnCarrito = (id) => carrito.find((p) => p.id === id)?.cantidad || 0;
 
@@ -144,8 +151,9 @@ function Catalogo() {
             </div>
 
             {/* Filtros por categoría */}
+            {!filtroFijo && (
             <div className="d-flex flex-wrap gap-2 mt-3" role="group" aria-label="Filtrar por categoría">
-                {categorias.map((c) => (
+                {["Todos", ...categorias].map((c) => (
                     <button
                         key={c}
                         type="button"
@@ -157,6 +165,7 @@ function Catalogo() {
                     </button>
                 ))}
             </div>
+            )}
 
             <p className="cat-resultados mt-3 mb-0" aria-live="polite">
                 {productosVisibles.length} {productosVisibles.length === 1 ? "producto" : "productos"}
