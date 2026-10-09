@@ -1,28 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
-
-const productos = [
-    { id: 1, nombre: "Guitarra Eléctrica Stratocaster", precio: 250000, imagen: "/img/guitarra.png", categoria: "Cuerdas" },
-    { id: 2, nombre: "Batería Acústica 5 piezas", precio: 550000, imagen: "/img/bateria.png", categoria: "Percusión" },
-    { id: 3, nombre: "Amplificador de Bajo 50W", precio: 120000, imagen: "/img/amplificador.png", categoria: "Equipos" },
-    { id: 4, nombre: "Micrófono Dinámico Vocal", precio: 45000, imagen: "/img/microfono.png", categoria: "Accesorios" },
-];
+import { useCarrito } from "../context/CarritoContext";
+import { productos, precioFinal } from "../data/productos";
 
 const categorias = [...new Set(productos.map((p) => p.categoria))];
 
 const formatoPrecio = (n) => `$${n.toLocaleString("es-CL")}`;
 
-function leerCarrito() {
-    try {
-        return JSON.parse(localStorage.getItem("carritoSonidoVivo")) || [];
-    } catch {
-        return [];
-    }
-}
-
 // categoriaFija (opcional): si se entrega, filtra por esa categoría y oculta los botones de filtro
 function Catalogo({ categoriaFija }) {
-    const [carrito, setCarrito] = useState(leerCarrito);
+    const { carrito, totalItems, totalPrecio, agregar, cambiarCantidad, quitar, vaciar } =
+        useCarrito();
+
     const [busqueda, setBusqueda] = useState("");
     const [categoria, setCategoria] = useState("Todos");
     const [orden, setOrden] = useState("destacados");
@@ -33,10 +22,6 @@ function Catalogo({ categoriaFija }) {
     const categoriaActiva = filtroFijo
         ? categoriaFija === "Todas" ? "Todos" : categoriaFija
         : categoria;
-
-    useEffect(() => {
-        localStorage.setItem("carritoSonidoVivo", JSON.stringify(carrito));
-    }, [carrito]);
 
     // Cerrar el panel con Escape
     useEffect(() => {
@@ -53,9 +38,6 @@ function Catalogo({ categoriaFija }) {
         return () => clearTimeout(t);
     }, [aviso]);
 
-    const totalItems = carrito.reduce((t, p) => t + p.cantidad, 0);
-    const totalPrecio = carrito.reduce((t, p) => t + p.precio * p.cantidad, 0);
-
     const productosVisibles = useMemo(() => {
         const texto = busqueda.trim().toLowerCase();
         const lista = productos.filter(
@@ -63,49 +45,17 @@ function Catalogo({ categoriaFija }) {
                 (categoriaActiva === "Todos" || p.categoria === categoriaActiva) &&
                 p.nombre.toLowerCase().includes(texto)
         );
-        if (orden === "menor") return [...lista].sort((a, b) => a.precio - b.precio);
-        if (orden === "mayor") return [...lista].sort((a, b) => b.precio - a.precio);
+        if (orden === "menor") return [...lista].sort((a, b) => precioFinal(a) - precioFinal(b));
+        if (orden === "mayor") return [...lista].sort((a, b) => precioFinal(b) - precioFinal(a));
         if (orden === "nombre") return [...lista].sort((a, b) => a.nombre.localeCompare(b.nombre));
         return lista;
     }, [busqueda, categoriaActiva, orden]);
 
     const cantidadEnCarrito = (id) => carrito.find((p) => p.id === id)?.cantidad || 0;
 
-    function agregarAlCarrito(productoSeleccionado) {
-        setCarrito((carritoActual) => {
-            const productoExiste = carritoActual.find((p) => p.id === productoSeleccionado.id);
-
-            if (productoExiste) {
-                return carritoActual.map((p) =>
-                    p.id === productoSeleccionado.id ? { ...p, cantidad: p.cantidad + 1 } : p
-                );
-            }
-
-            return [
-                ...carritoActual,
-                {
-                    id: productoSeleccionado.id,
-                    nombre: productoSeleccionado.nombre,
-                    precio: productoSeleccionado.precio,
-                    imagen: productoSeleccionado.imagen,
-                    cantidad: 1,
-                },
-            ];
-        });
-
-        setAviso(`${productoSeleccionado.nombre} se agregó al carrito`);
-    }
-
-    function cambiarCantidad(id, delta) {
-        setCarrito((actual) =>
-            actual
-                .map((p) => (p.id === id ? { ...p, cantidad: p.cantidad + delta } : p))
-                .filter((p) => p.cantidad > 0)
-        );
-    }
-
-    function quitarDelCarrito(id) {
-        setCarrito((actual) => actual.filter((p) => p.id !== id));
+    function agregarAlCarrito(producto) {
+        agregar({ ...producto, precio: precioFinal(producto) });
+        setAviso(`${producto.nombre} se agregó al carrito`);
     }
 
     function limpiarFiltros() {
@@ -152,19 +102,19 @@ function Catalogo({ categoriaFija }) {
 
             {/* Filtros por categoría */}
             {!filtroFijo && (
-            <div className="d-flex flex-wrap gap-2 mt-3" role="group" aria-label="Filtrar por categoría">
-                {["Todos", ...categorias].map((c) => (
-                    <button
-                        key={c}
-                        type="button"
-                        className={`btn btn-sm cat-chip ${categoria === c ? "activo" : ""}`}
-                        aria-pressed={categoria === c}
-                        onClick={() => setCategoria(c)}
-                    >
-                        {c}
-                    </button>
-                ))}
-            </div>
+                <div className="d-flex flex-wrap gap-2 mt-3" role="group" aria-label="Filtrar por categoría">
+                    {["Todos", ...categorias].map((c) => (
+                        <button
+                            key={c}
+                            type="button"
+                            className={`btn btn-sm cat-chip ${categoria === c ? "activo" : ""}`}
+                            aria-pressed={categoria === c}
+                            onClick={() => setCategoria(c)}
+                        >
+                            {c}
+                        </button>
+                    ))}
+                </div>
             )}
 
             <p className="cat-resultados mt-3 mb-0" aria-live="polite">
@@ -185,14 +135,31 @@ function Catalogo({ categoriaFija }) {
                         const cantidad = cantidadEnCarrito(producto.id);
 
                         return (
-                            <article className="tarjeta-producto" key={producto.id}>
+                            <article
+                                className="tarjeta-producto"
+                                key={producto.id}
+                                style={{ position: "relative" }}
+                            >
+                                {producto.descuento > 0 && (
+                                    <span className="badge bg-danger position-absolute top-0 end-0 m-2">
+                                        -{producto.descuento}%
+                                    </span>
+                                )}
+
                                 <img src={producto.imagen} alt={producto.nombre} loading="lazy" />
 
                                 <span className="cat-etiqueta">{producto.categoria}</span>
 
                                 <h3>{producto.nombre}</h3>
 
-                                <p className="precio">{formatoPrecio(producto.precio)}</p>
+                                <p className="precio">
+                                    {producto.descuento > 0 && (
+                                        <small className="text-decoration-line-through text-secondary me-2">
+                                            {formatoPrecio(producto.precio)}
+                                        </small>
+                                    )}
+                                    {formatoPrecio(precioFinal(producto))}
+                                </p>
 
                                 {cantidad === 0 ? (
                                     <button type="button" onClick={() => agregarAlCarrito(producto)}>
@@ -285,7 +252,7 @@ function Catalogo({ categoriaFija }) {
                                         <button
                                             type="button"
                                             className="cat-quitar"
-                                            onClick={() => quitarDelCarrito(item.id)}
+                                            onClick={() => quitar(item.id)}
                                         >
                                             Quitar
                                         </button>
@@ -304,7 +271,7 @@ function Catalogo({ categoriaFija }) {
                                 Ver carrito completo
                             </Link>
 
-                            <button type="button" className="btn btn-outline-secondary w-100" onClick={() => setCarrito([])}>
+                            <button type="button" className="btn btn-outline-secondary w-100" onClick={vaciar}>
                                 Vaciar carrito
                             </button>
                         </footer>
