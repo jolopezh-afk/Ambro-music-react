@@ -1,3 +1,4 @@
+import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import "../index.css";
 
@@ -268,12 +269,7 @@ return (
 
         </main>
 
-        <footer>
-            <p className="mb-0">
-                AmbroMusic - La Florida, Santiago de Chile.
-                Todos los derechos reservados.
-            </p>
-        </footer>
+        <Footer />
     </div>
 );
 
