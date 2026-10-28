@@ -1,24 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import TarjetaProducto from "./TarjetaProducto";
-import { productos, categorias } from "../data/productos";
+import { useCarrito } from "../context/CarritoContext";
+import { productos, categorias, precioFinal } from "../data/productos";
 
-const precioFinal = (p) => p.precioOferta ?? p.precio;
 const formatoPrecio = (n) => `$${n.toLocaleString("es-CL")}`;
-
-function leerCarrito() {
-    try {
-        return JSON.parse(localStorage.getItem("carritoSonidoVivo")) || [];
-    } catch {
-        return [];
-    }
-}
 
 // categoriaFija (opcional): filtra por esa categoría y oculta los botones de filtro
 // soloOfertas (opcional): muestra solo los productos con precioOferta
 // compacto (opcional): muestra solo 4 productos, sin buscador ni filtros (para el inicio)
 function Catalogo({ categoriaFija, compacto = false, soloOfertas = false }) {
-    const [carrito, setCarrito] = useState(leerCarrito);
+    const { carrito, totalItems, totalPrecio, agregar, cambiarCantidad, quitar, vaciar } =
+        useCarrito();
     const [searchParams] = useSearchParams();
     const buscarDesdeUrl = searchParams.get("buscar") ?? "";
     const [busqueda, setBusqueda] = useState(buscarDesdeUrl);
@@ -31,10 +24,6 @@ function Catalogo({ categoriaFija, compacto = false, soloOfertas = false }) {
     const categoriaActiva = filtroFijo
         ? categoriaFija === "Todas" ? "Todos" : categoriaFija
         : categoria;
-
-    useEffect(() => {
-        localStorage.setItem("carritoSonidoVivo", JSON.stringify(carrito));
-    }, [carrito]);
 
     // Si la búsqueda del Navbar cambia mientras ya estás en la página, se actualiza
     const [ultimaBusquedaUrl, setUltimaBusquedaUrl] = useState(buscarDesdeUrl);
@@ -58,9 +47,6 @@ function Catalogo({ categoriaFija, compacto = false, soloOfertas = false }) {
         return () => clearTimeout(t);
     }, [aviso]);
 
-    const totalItems = carrito.reduce((t, p) => t + p.cantidad, 0);
-    const totalPrecio = carrito.reduce((t, p) => t + p.precio * p.cantidad, 0);
-
     const productosVisibles = useMemo(() => {
         const texto = busqueda.trim().toLowerCase();
         const lista = productos.filter(
@@ -79,41 +65,9 @@ function Catalogo({ categoriaFija, compacto = false, soloOfertas = false }) {
 
     const cantidadEnCarrito = (id) => carrito.find((p) => p.id === id)?.cantidad || 0;
 
-    function agregarAlCarrito(productoSeleccionado) {
-        setCarrito((carritoActual) => {
-            const productoExiste = carritoActual.find((p) => p.id === productoSeleccionado.id);
-
-            if (productoExiste) {
-                return carritoActual.map((p) =>
-                    p.id === productoSeleccionado.id ? { ...p, cantidad: p.cantidad + 1 } : p
-                );
-            }
-
-            return [
-                ...carritoActual,
-                {
-                    id: productoSeleccionado.id,
-                    nombre: productoSeleccionado.nombre,
-                    precio: precioFinal(productoSeleccionado),
-                    imagen: productoSeleccionado.imagen,
-                    cantidad: 1,
-                },
-            ];
-        });
-
-        setAviso(`${productoSeleccionado.nombre} se agregó al carrito`);
-    }
-
-    function cambiarCantidad(id, delta) {
-        setCarrito((actual) =>
-            actual
-                .map((p) => (p.id === id ? { ...p, cantidad: p.cantidad + delta } : p))
-                .filter((p) => p.cantidad > 0)
-        );
-    }
-
-    function quitarDelCarrito(id) {
-        setCarrito((actual) => actual.filter((p) => p.id !== id));
+    function agregarAlCarrito(producto) {
+        agregar({ ...producto, precio: precioFinal(producto) });
+        setAviso(`${producto.nombre} se agregó al carrito`);
     }
 
     function limpiarFiltros() {
@@ -162,19 +116,19 @@ function Catalogo({ categoriaFija, compacto = false, soloOfertas = false }) {
 
             {/* Filtros por categoría */}
             {!filtroFijo && (
-            <div className="d-flex flex-wrap gap-2 mt-3" role="group" aria-label="Filtrar por categoría">
-                {["Todos", ...categorias].map((c) => (
-                    <button
-                        key={c}
-                        type="button"
-                        className={`btn btn-sm cat-chip ${categoria === c ? "activo" : ""}`}
-                        aria-pressed={categoria === c}
-                        onClick={() => setCategoria(c)}
-                    >
-                        {c}
-                    </button>
-                ))}
-            </div>
+                <div className="d-flex flex-wrap gap-2 mt-3" role="group" aria-label="Filtrar por categoría">
+                    {["Todos", ...categorias].map((c) => (
+                        <button
+                            key={c}
+                            type="button"
+                            className={`btn btn-sm cat-chip ${categoria === c ? "activo" : ""}`}
+                            aria-pressed={categoria === c}
+                            onClick={() => setCategoria(c)}
+                        >
+                            {c}
+                        </button>
+                    ))}
+                </div>
             )}
 
             <p className="cat-resultados mt-3 mb-0" aria-live="polite">
@@ -267,7 +221,7 @@ function Catalogo({ categoriaFija, compacto = false, soloOfertas = false }) {
                                         <button
                                             type="button"
                                             className="cat-quitar"
-                                            onClick={() => quitarDelCarrito(item.id)}
+                                            onClick={() => quitar(item.id)}
                                         >
                                             Quitar
                                         </button>
@@ -286,7 +240,7 @@ function Catalogo({ categoriaFija, compacto = false, soloOfertas = false }) {
                                 Ver carrito completo
                             </Link>
 
-                            <button type="button" className="btn btn-outline-secondary w-100" onClick={() => setCarrito([])}>
+                            <button type="button" className="btn btn-outline-secondary w-100" onClick={vaciar}>
                                 Vaciar carrito
                             </button>
                         </footer>

@@ -1,8 +1,10 @@
+import { porcentajeDescuento } from "../data/productos";
+
 const formatoPrecio = (n) => `$${n.toLocaleString("es-CL")}`;
 
 function TarjetaProducto({ producto, cantidad, onAgregar, onCambiarCantidad }) {
     const { id, nombre, precio, precioOferta, imagen, categoria } = producto;
-    const descuento = precioOferta ? Math.round((1 - precioOferta / precio) * 100) : 0;
+    const descuento = porcentajeDescuento(producto);
 
     return (
         <article className="tarjeta-producto">

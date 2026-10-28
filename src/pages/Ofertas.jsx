@@ -1,12 +1,12 @@
 import Navbar from "../components/Navbar";
 import Catalogo from "../components/Catalogo";
 import Footer from "../components/Footer";
-import { productos } from "../data/productos";
+import { productos, porcentajeDescuento } from "../data/productos";
 import "../index.css";
 
 const ofertas = productos.filter((p) => p.precioOferta);
 const mayorDescuento = ofertas.length
-    ? Math.max(...ofertas.map((p) => Math.round((1 - p.precioOferta / p.precio) * 100)))
+    ? Math.max(...ofertas.map(porcentajeDescuento))
     : 0;
 
 function Ofertas() {

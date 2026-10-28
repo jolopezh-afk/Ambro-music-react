@@ -29,3 +29,15 @@ export const productos = [
 ];
 
 export const categorias = [...new Set(productos.map((p) => p.categoria))];
+
+// Precio con la oferta aplicada (si no tiene precioOferta, es el precio normal)
+export function precioFinal(producto) {
+    return producto.precioOferta ?? producto.precio;
+}
+
+// Porcentaje de descuento redondeado (0 si no hay oferta)
+export function porcentajeDescuento(producto) {
+    return producto.precioOferta
+        ? Math.round((1 - producto.precioOferta / producto.precio) * 100)
+        : 0;
+}

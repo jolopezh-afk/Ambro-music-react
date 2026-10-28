@@ -1,47 +1,22 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useCarrito } from "../context/CarritoContext";
 import "../index.css";
 
 const formatoPrecio = (n) => `$${n.toLocaleString("es-CL")}`;
 
-function leerCarrito() {
-    try {
-        return JSON.parse(localStorage.getItem("carritoSonidoVivo")) || [];
-    } catch {
-        return [];
-    }
-}
-
 function Carrito() {
-    const [carrito, setCarrito] = useState(leerCarrito);
+    const { carrito, totalItems, totalPrecio: total, cambiarCantidad, quitar, vaciar } = useCarrito();
     const [compraRealizada, setCompraRealizada] = useState(false);
 
-    useEffect(() => {
-        localStorage.setItem("carritoSonidoVivo", JSON.stringify(carrito));
-    }, [carrito]);
-
-    const totalItems = carrito.reduce((t, p) => t + p.cantidad, 0);
-    const total = carrito.reduce((t, p) => t + p.precio * p.cantidad, 0);
     const neto = Math.round(total / 1.19);
     const iva = total - neto;
 
-    function cambiarCantidad(id, delta) {
-        setCarrito((actual) =>
-            actual
-                .map((p) => (p.id === id ? { ...p, cantidad: p.cantidad + delta } : p))
-                .filter((p) => p.cantidad > 0)
-        );
-    }
-
-    function quitarDelCarrito(id) {
-        setCarrito((actual) => actual.filter((p) => p.id !== id));
-    }
-
     function finalizarCompra() {
         // Compra simulada: aquí iría la conexión con el pago o el backend
-        setCarrito([]);
+        vaciar();
         setCompraRealizada(true);
     }
 
@@ -117,7 +92,7 @@ function Carrito() {
                                             <button
                                                 type="button"
                                                 className="cat-quitar"
-                                                onClick={() => quitarDelCarrito(item.id)}
+                                                onClick={() => quitar(item.id)}
                                             >
                                                 Quitar
                                             </button>
@@ -149,7 +124,7 @@ function Carrito() {
                                 <button
                                     type="button"
                                     className="btn btn-outline-secondary w-100 mt-2"
-                                    onClick={() => setCarrito([])}
+                                    onClick={vaciar}
                                 >
                                     Vaciar carrito
                                 </button>

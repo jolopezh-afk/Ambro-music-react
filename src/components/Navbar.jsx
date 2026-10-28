@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import { useCarrito } from "../context/CarritoContext";
 import { rutaPorRol } from "../data/usuarios";
 
 const enlaces = [
@@ -9,13 +10,13 @@ const enlaces = [
     { to: "/productos", texto: "Productos" },
     { to: "/ofertas", texto: "Ofertas" },
     { to: "/contacto", texto: "Contacto" },
-    { to: "/carrito", texto: "🛒 Carrito" },
 ];
 
 function Navbar() {
     const [texto, setTexto] = useState("");
     const navigate = useNavigate();
     const { usuario, cerrarSesion } = useAuth();
+    const { totalItems } = useCarrito();
 
     function salir() {
         cerrarSesion();
@@ -80,6 +81,12 @@ function Navbar() {
                                 </NavLink>
                             </li>
                         ))}
+
+                        <li className="nav-item">
+                            <NavLink className="nav-link" to="/carrito">
+                                🛒 Carrito ({totalItems})
+                            </NavLink>
+                        </li>
 
                         {usuario ? (
                             <>
