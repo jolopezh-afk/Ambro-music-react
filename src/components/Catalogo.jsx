@@ -1,15 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
+import TarjetaProducto from "./TarjetaProducto";
+import { productos, categorias } from "../data/productos";
 
-const productos = [
-    { id: 1, nombre: "Guitarra Eléctrica Stratocaster", precio: 250000, imagen: "/img/guitarra.png", categoria: "Cuerdas" },
-    { id: 2, nombre: "Batería Acústica 5 piezas", precio: 550000, imagen: "/img/bateria.png", categoria: "Percusión" },
-    { id: 3, nombre: "Amplificador de Bajo 50W", precio: 120000, imagen: "/img/amplificador.png", categoria: "Equipos" },
-    { id: 4, nombre: "Micrófono Dinámico Vocal", precio: 45000, imagen: "/img/microfono.png", categoria: "Accesorios" },
-];
-
-const categorias = [...new Set(productos.map((p) => p.categoria))];
-
+const precioFinal = (p) => p.precioOferta ?? p.precio;
 const formatoPrecio = (n) => `$${n.toLocaleString("es-CL")}`;
 
 function leerCarrito() {
@@ -20,10 +14,14 @@ function leerCarrito() {
     }
 }
 
-// categoriaFija (opcional): si se entrega, filtra por esa categoría y oculta los botones de filtro
-function Catalogo({ categoriaFija }) {
+// categoriaFija (opcional): filtra por esa categoría y oculta los botones de filtro
+// soloOfertas (opcional): muestra solo los productos con precioOferta
+// compacto (opcional): muestra solo 4 productos, sin buscador ni filtros (para el inicio)
+function Catalogo({ categoriaFija, compacto = false, soloOfertas = false }) {
     const [carrito, setCarrito] = useState(leerCarrito);
-    const [busqueda, setBusqueda] = useState("");
+    const [searchParams] = useSearchParams();
+    const buscarDesdeUrl = searchParams.get("buscar") ?? "";
+    const [busqueda, setBusqueda] = useState(buscarDesdeUrl);
     const [categoria, setCategoria] = useState("Todos");
     const [orden, setOrden] = useState("destacados");
     const [panelAbierto, setPanelAbierto] = useState(false);
@@ -37,6 +35,13 @@ function Catalogo({ categoriaFija }) {
     useEffect(() => {
         localStorage.setItem("carritoSonidoVivo", JSON.stringify(carrito));
     }, [carrito]);
+
+    // Si la búsqueda del Navbar cambia mientras ya estás en la página, se actualiza
+    const [ultimaBusquedaUrl, setUltimaBusquedaUrl] = useState(buscarDesdeUrl);
+    if (ultimaBusquedaUrl !== buscarDesdeUrl) {
+        setUltimaBusquedaUrl(buscarDesdeUrl);
+        setBusqueda(buscarDesdeUrl);
+    }
 
     // Cerrar el panel con Escape
     useEffect(() => {
@@ -60,14 +65,17 @@ function Catalogo({ categoriaFija }) {
         const texto = busqueda.trim().toLowerCase();
         const lista = productos.filter(
             (p) =>
+                (!soloOfertas || p.precioOferta) &&
                 (categoriaActiva === "Todos" || p.categoria === categoriaActiva) &&
                 p.nombre.toLowerCase().includes(texto)
         );
-        if (orden === "menor") return [...lista].sort((a, b) => a.precio - b.precio);
-        if (orden === "mayor") return [...lista].sort((a, b) => b.precio - a.precio);
+        if (orden === "menor") return [...lista].sort((a, b) => precioFinal(a) - precioFinal(b));
+        if (orden === "mayor") return [...lista].sort((a, b) => precioFinal(b) - precioFinal(a));
         if (orden === "nombre") return [...lista].sort((a, b) => a.nombre.localeCompare(b.nombre));
         return lista;
-    }, [busqueda, categoriaActiva, orden]);
+    }, [busqueda, categoriaActiva, orden, soloOfertas]);
+
+    const mostrados = compacto ? productosVisibles.slice(0, 4) : productosVisibles;
 
     const cantidadEnCarrito = (id) => carrito.find((p) => p.id === id)?.cantidad || 0;
 
@@ -86,7 +94,7 @@ function Catalogo({ categoriaFija }) {
                 {
                     id: productoSeleccionado.id,
                     nombre: productoSeleccionado.nombre,
-                    precio: productoSeleccionado.precio,
+                    precio: precioFinal(productoSeleccionado),
                     imagen: productoSeleccionado.imagen,
                     cantidad: 1,
                 },
@@ -116,6 +124,8 @@ function Catalogo({ categoriaFija }) {
 
     return (
         <>
+            {!compacto && (
+            <>
             {/* Buscador, orden y botón del carrito */}
             <div className="cat-barra d-flex flex-wrap gap-2 align-items-center mt-3">
                 <input
@@ -170,6 +180,8 @@ function Catalogo({ categoriaFija }) {
             <p className="cat-resultados mt-3 mb-0" aria-live="polite">
                 {productosVisibles.length} {productosVisibles.length === 1 ? "producto" : "productos"}
             </p>
+            </>
+            )}
 
             {/* Grilla de productos */}
             {productosVisibles.length === 0 ? (
@@ -181,45 +193,15 @@ function Catalogo({ categoriaFija }) {
                 </div>
             ) : (
                 <div className="grid-productos">
-                    {productosVisibles.map((producto) => {
-                        const cantidad = cantidadEnCarrito(producto.id);
-
-                        return (
-                            <article className="tarjeta-producto" key={producto.id}>
-                                <img src={producto.imagen} alt={producto.nombre} loading="lazy" />
-
-                                <span className="cat-etiqueta">{producto.categoria}</span>
-
-                                <h3>{producto.nombre}</h3>
-
-                                <p className="precio">{formatoPrecio(producto.precio)}</p>
-
-                                {cantidad === 0 ? (
-                                    <button type="button" onClick={() => agregarAlCarrito(producto)}>
-                                        Añadir al carrito
-                                    </button>
-                                ) : (
-                                    <div className="cat-cantidad" role="group" aria-label="Cantidad en el carrito">
-                                        <button
-                                            type="button"
-                                            onClick={() => cambiarCantidad(producto.id, -1)}
-                                            aria-label={`Quitar una unidad de ${producto.nombre}`}
-                                        >
-                                            −
-                                        </button>
-                                        <span>{cantidad} en el carrito</span>
-                                        <button
-                                            type="button"
-                                            onClick={() => cambiarCantidad(producto.id, 1)}
-                                            aria-label={`Agregar una unidad de ${producto.nombre}`}
-                                        >
-                                            +
-                                        </button>
-                                    </div>
-                                )}
-                            </article>
-                        );
-                    })}
+                    {mostrados.map((producto) => (
+                        <TarjetaProducto
+                            key={producto.id}
+                            producto={producto}
+                            cantidad={cantidadEnCarrito(producto.id)}
+                            onAgregar={agregarAlCarrito}
+                            onCambiarCantidad={cambiarCantidad}
+                        />
+                    ))}
                 </div>
             )}
 

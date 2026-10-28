@@ -1,6 +1,33 @@
-import { Link } from "react-router";
+import { useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router";
+import { useAuth } from "../context/AuthContext";
+import { rutaPorRol } from "../data/usuarios";
+
+const enlaces = [
+    { to: "/", texto: "Inicio" },
+    { to: "/categorias", texto: "Categorías" },
+    { to: "/productos", texto: "Productos" },
+    { to: "/ofertas", texto: "Ofertas" },
+    { to: "/contacto", texto: "Contacto" },
+    { to: "/carrito", texto: "🛒 Carrito" },
+];
 
 function Navbar() {
+    const [texto, setTexto] = useState("");
+    const navigate = useNavigate();
+    const { usuario, cerrarSesion } = useAuth();
+
+    function salir() {
+        cerrarSesion();
+        navigate("/");
+    }
+
+    function buscar(e) {
+        e.preventDefault();
+        const consulta = texto.trim();
+        navigate(consulta ? `/productos?buscar=${encodeURIComponent(consulta)}` : "/productos");
+    }
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark navbar-ambromusic">
             <div className="container">
@@ -24,92 +51,70 @@ function Navbar() {
                     <span className="navbar-toggler-icon"></span>
                 </button>
 
-                <div
-                    className="collapse navbar-collapse"
-                    id="navbarAmbroMusic"
-                >
+                <div className="collapse navbar-collapse" id="navbarAmbroMusic">
                     <form
                         className="d-flex mx-lg-4 my-3 my-lg-0 flex-grow-1"
                         role="search"
+                        onSubmit={buscar}
                     >
                         <input
                             className="form-control me-2"
                             type="search"
                             placeholder="Buscar equipos de música..."
                             aria-label="Buscar"
+                            value={texto}
+                            onChange={(e) => setTexto(e.target.value)}
                         />
 
-                        <button
-                            className="btn btn-ambromusic"
-                            type="submit"
-                        >
+                        <button className="btn btn-ambromusic" type="submit">
                             Buscar
                         </button>
                     </form>
 
                     <ul className="navbar-nav ms-auto align-items-lg-center">
-                        <li className="nav-item">
-                            <Link
-                                className="nav-link"
-                                to="/"
-                            >
-                                Inicio
-                            </Link>
-                        </li>
+                        {enlaces.map(({ to, texto }) => (
+                            <li className="nav-item" key={to}>
+                                {/* "end" en Inicio evita que quede activo en todas las páginas */}
+                                <NavLink className="nav-link" to={to} end={to === "/"}>
+                                    {texto}
+                                </NavLink>
+                            </li>
+                        ))}
 
-                        <li className="nav-item">
-                            <Link
-                                className="nav-link"
-                                to="/categorias"
-                            >
-                                Categorías
-                            </Link>
-                        </li>
+                        {usuario ? (
+                            <>
+                                <li className="nav-item">
+                                    <span className="navbar-text ms-lg-2">Hola, {usuario.nombre}</span>
+                                </li>
 
-                        <li className="nav-item">
-                            <Link
-                                className="nav-link"
-                                to="/productos"
-                            >
-                                Productos
-                            </Link>
-                        </li>
+                                {usuario.rol !== "comprador" && (
+                                    <li className="nav-item">
+                                        <NavLink className="nav-link" to={rutaPorRol[usuario.rol]}>
+                                            Mi panel
+                                        </NavLink>
+                                    </li>
+                                )}
 
-                        <li className="nav-item">
-                            <Link
-                                className="nav-link"
-                                to="/ofertas"
-                            >
-                                Ofertas
-                            </Link>
-                        </li>
-
-                        <li className="nav-item">
-                            <Link
-                                className="nav-link"
-                                to="/contacto"
-                            >
-                                Contacto
-                            </Link>
-                        </li>
-
-                        <li className="nav-item">
-                            <Link
-                                className="nav-link"
-                                to="/carrito"
-                            >
-                                🛒 Carrito
-                            </Link>
-                        </li>
-
-                        <li className="nav-item">
-                            <Link
-                                className="btn btn-ambromusic ms-lg-2 mt-2 mt-lg-0"
-                                to="/inicio-sesion"
-                            >
-                                Iniciar sesión
-                            </Link>
-                        </li>
+                                <li className="nav-item">
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline-light ms-lg-2 mt-2 mt-lg-0"
+                                        onClick={salir}
+                                    >
+                                        Cerrar sesión
+                                    </button>
+                                </li>
+                            </>
+                        ) : (
+                            <li className="nav-item">
+                                <Link
+                                    className="btn btn-ambromusic ms-lg-2 mt-2 mt-lg-0"
+                                    to="/inicio-sesion"
+                                >
+                                    Iniciar sesión
+                                </Link>
+                            </li>
+                        )}
                     </ul>
                 </div>
             </div>

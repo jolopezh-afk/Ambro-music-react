@@ -1354,3 +1354,277 @@ color: var(--blanco);
 .tarjeta-producto .cat-cantidad {
     width: 100%;
 }
+
+
+/* =========================
+   NAVBAR: PÁGINA ACTIVA
+   ========================= */
+
+.navbar-ambromusic .navbar-nav .nav-link {
+    position: relative;
+    padding: 0.6rem 1rem;
+    color: var(--gris);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.navbar-ambromusic .navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    bottom: 2px;
+    height: 2px;
+    background-color: var(--amarillo);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.navbar-ambromusic .navbar-nav .nav-link:hover {
+    color: var(--blanco);
+}
+
+.navbar-ambromusic .navbar-nav .nav-link:hover::after,
+.navbar-ambromusic .navbar-nav .nav-link.active::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.navbar-ambromusic .navbar-nav .nav-link.active {
+    color: var(--amarillo);
+    text-shadow: 0 0 14px rgba(251, 192, 45, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navbar-ambromusic .navbar-nav .nav-link,
+    .navbar-ambromusic .navbar-nav .nav-link::after {
+        transition: none;
+    }
+}
+
+/* =========================
+   INICIO: SECCIONES
+   ========================= */
+
+.seccion-inicio {
+    margin-top: 56px;
+}
+
+.seccion-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.seccion-titulo {
+    margin: 0;
+    color: var(--blanco);
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.seccion-enlace {
+    color: var(--amarillo);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.seccion-enlace:hover {
+    color: var(--amarillo);
+    text-decoration: underline;
+}
+
+a.tarjeta-categoria,
+a.tarjeta-categoria:hover {
+    color: var(--blanco);
+    text-decoration: none;
+}
+
+.banner-ofertas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: 56px;
+    padding: 36px 40px;
+    border-radius: 12px;
+    background: linear-gradient(120deg, var(--rojo) 0%, #7f1d1d 100%);
+}
+
+.banner-ofertas h2 {
+    margin: 0 0 6px;
+    color: var(--blanco);
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.banner-ofertas p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* =========================
+   OFERTAS
+   ========================= */
+
+.hero-ofertas {
+    padding: 56px 0 48px;
+    background:
+        repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0 14px, transparent 14px 28px),
+        linear-gradient(120deg, var(--rojo) 0%, #7f1d1d 100%);
+    border-bottom: 1px solid #333333;
+}
+
+.hero-ofertas-etiqueta {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 4px 12px;
+    background-color: var(--negro);
+    border-radius: 999px;
+    color: var(--amarillo);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.hero-ofertas-titulo {
+    margin: 0 0 8px;
+    color: var(--blanco);
+    font-size: clamp(2rem, 6vw, 3.6rem);
+    font-weight: 800;
+}
+
+.hero-ofertas-titulo span {
+    color: var(--amarillo);
+}
+
+.hero-ofertas-texto {
+    max-width: 560px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.tarjeta-producto {
+    position: relative;
+}
+
+.badge-oferta {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    padding: 4px 10px;
+    background-color: var(--rojo);
+    border-radius: 6px;
+    color: var(--blanco);
+    font-size: 0.85rem;
+    font-weight: 700;
+    z-index: 1;
+}
+
+.tarjeta-producto .precio-antes {
+    display: block;
+    color: var(--gris);
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-decoration: line-through;
+}
+
+/* =========================
+   CONTACTO: PREFIJO DE TELÉFONO
+   ========================= */
+
+.contacto-card .input-group-text {
+    background-color: var(--negro);
+    border: 1px solid #333333;
+    border-right: none;
+    border-radius: 6px 0 0 6px;
+    color: var(--gris);
+    font-weight: 600;
+}
+
+.contacto-card .input-group .form-control {
+    border-radius: 0 6px 6px 0;
+}
+
+/* =========================
+   INICIO DE SESIÓN: EXTRAS
+   ========================= */
+
+.login-error {
+    margin-bottom: 16px;
+    padding: 10px 12px;
+    background-color: rgba(211, 47, 47, 0.12);
+    border: 1px solid var(--rojo);
+    border-radius: 6px;
+    color: var(--blanco);
+    font-size: 0.9rem;
+}
+
+.login-demo {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #333333;
+}
+
+.login-demo p {
+    margin-bottom: 8px;
+    color: var(--gris);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.login-demo button {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background-color: var(--negro);
+    border: 1px solid #333333;
+    border-radius: 6px;
+    color: var(--blanco);
+    text-align: left;
+    transition: border-color 0.2s ease;
+}
+
+.login-demo button:hover {
+    border-color: var(--rojo);
+}
+
+.login-demo button span {
+    color: var(--gris);
+    font-size: 0.8rem;
+}
+
+/* =========================
+   PANELES VENDEDOR Y ADMIN
+   ========================= */
+
+.tarjeta-vendedor.compacta,
+.tarjeta-admin.compacta {
+    min-height: 200px;
+}
+
+a.btn-vendedor,
+a.btn-admin {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-vendedor:disabled,
+.btn-admin:disabled {
+    background-color: #333333;
+    color: var(--gris);
+    cursor: not-allowed;
+}

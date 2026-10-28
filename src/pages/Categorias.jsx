@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router";
 import Navbar from "../components/Navbar";
 import Catalogo from "../components/Catalogo";
 import Footer from "../components/Footer";
@@ -16,7 +17,12 @@ const categorias = [
 
 function Categorias() {
     // null = se muestran las categorías; con un valor = se muestran sus productos
-    const [seleccionada, setSeleccionada] = useState(null);
+    // Si la URL trae ?categoria=Cuerdas, se abre esa categoría directamente
+    const [searchParams] = useSearchParams();
+    const desdeUrl = searchParams.get("categoria");
+    const [seleccionada, setSeleccionada] = useState(
+        categorias.some((c) => c.nombre === desdeUrl) ? desdeUrl : null
+    );
 
     function elegir(nombre) {
         setSeleccionada(nombre);
